@@ -2,7 +2,7 @@
   <div>
     <div class="header-body cc-df-between">
       <div class="t-left cc-df">
-        <img src="../assets/zijin.png" class="t-card" />
+        <!-- <img src="../assets/zijin.png" class="t-card" /> -->
         <p class="wenzi">南京工业职业技术大学</p>
         <p class="btwz">欢迎进入客户管理系统</p>
       </div>

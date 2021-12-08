@@ -3,8 +3,8 @@
     <div class="header-body cc-df-between">
       <div class="t-left cc-df">
         <img src="../assets/zijin.png" class="t-card" />
-        <p class="wenzi">zijin school</p>
-        <p class="btwz">欢迎进入紫金教务系统</p>
+        <p class="wenzi">nangong school</p>
+        <p class="btwz">欢迎进入客户管理系统</p>
       </div>
       <div class="t-right">
         <a-icon
@@ -32,7 +32,7 @@
               <a-icon type="mail" />
               首页
             </a-menu-item>
-            <a-sub-menu key="sub1" v-if="user.roleId == 1">
+            <a-sub-menu key="sub1">
               <span slot="title"
                 ><a-icon type="setting" /><span>人事管理</span></span
               >
@@ -41,21 +41,21 @@
               <!-- <a-menu-item key="4" @click="into(3)">学生男女生比例</a-menu-item>
               <a-menu-item key="5" @click="into(4)">招生情况</a-menu-item> -->
             </a-sub-menu>
-            <!-- <a-sub-menu key="sub2" v-if="user.roleId == 1">
+            <a-sub-menu key="sub2">
               <span slot="title"
-                ><a-icon type="setting" /><span>班级管理</span></span
+                ><a-icon type="setting" /><span>部门管理</span></span
               >
-              <a-menu-item key="6" @click="into(5)">班级信息管理</a-menu-item>
-              <a-menu-item key="7" @click="into(10)">班级学生管理</a-menu-item>
+              <a-menu-item key="6" @click="into(5)">部门信息管理</a-menu-item>
+              <!-- <a-menu-item key="7" @click="into(10)">班级学生管理</a-menu-item> -->
             </a-sub-menu>
-            <a-sub-menu key="sub3" v-if="user.roleId == 1">
+            <a-sub-menu key="sub3">
               <span slot="title"
                 ><a-icon type="setting" /><span>权限管理</span></span
               >
               <a-menu-item key="10" @click="into(6)">系统用户管理</a-menu-item>
               <a-menu-item key="11" @click="into(7)">角色信息管理</a-menu-item>
             </a-sub-menu>
-            <a-sub-menu key="sub4" v-if="user.roleId == 1">
+            <!-- <a-sub-menu key="sub4" v-if="user.roleId == 1">
               <span slot="title"
                 ><a-icon type="setting" /><span>课程管理</span></span
               >
@@ -104,7 +104,7 @@ export default {
         this.$router.push("/layout");
       }
       if (index == 1) {
-        this.$router.push("/studentTable");
+        this.$router.push("/personTable");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {
@@ -113,7 +113,7 @@ export default {
         }
         if (i == this.panes.length) {
           this.panes.push({
-            name: "学生信息管理",
+            name: "员工信息管理",
             id: 1,
           });
           this.activeKey = 1;
@@ -168,7 +168,7 @@ export default {
         }
       }
       if (index == 5) {
-        this.$router.push("/classTable");
+        this.$router.push("/department");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {
@@ -177,7 +177,7 @@ export default {
         }
         if (i == this.panes.length) {
           this.panes.push({
-            name: "班级信息管理",
+            name: "部门信息管理",
             id: 5,
           });
           this.activeKey = 5;

@@ -32,7 +32,10 @@
         </a-input-password>
       </div>
       <div class="c-b">
-        <a-checkbox> 自动登录 </a-checkbox>
+        <a-radio-group v-model="roleId" @change="onChange">
+          <a-radio :value="1"> 管理员登录 </a-radio>
+          <a-radio :value="2"> 员工登录 </a-radio>
+        </a-radio-group>
       </div>
       <div class="cc-col-center">
         <a-button class="l-b" type="primary" @click="login"> 登录 </a-button>
@@ -54,17 +57,22 @@ export default {
     return {
       userName: "",
       password: "",
+      roleId: 1,
     };
   },
   components: {},
   created() {},
   mounted() {},
   methods: {
+    onChange(e) {
+      console.log("radio checked", this.roleId);
+    },
     async login() {
-      this.url = this.GLOBAL.baseUrl + "/sys/user/login";
+      this.url = this.GLOBAL.baseUrl + "/admin/login";
       this.data = {
-        userName: this.userName,
+        phone: this.userName,
         password: this.password,
+        roleId: this.roleId,
       };
       this.result = await API.init(this.url, this.data, "post");
       if (this.result.code == 1) {

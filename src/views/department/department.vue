@@ -68,29 +68,20 @@
       @change="onChange"
       @showSizeChange="onShow"
     />
-    <sys-people-model ref="modalForm" @getAll="getAll"></sys-people-model>
   </div>
 </template>
 <script>
 const API = require("../../request/api.js");
-import sysPeopleModel from "./modules/sysPeopleModel.vue";
 const columns = [
   {
-    title: "管理名字",
-    dataIndex: "adminName",
-    key: "adminName",
+    title: "部门名字",
+    dataIndex: "depName",
+    key: "depName",
   },
   {
-    title: "手机号",
-    dataIndex: "phone",
-    key: "phone",
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    key: "status",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "status" },
+    title: "部门简介",
+    dataIndex: "description",
+    key: "description",
   },
   {
     title: "操作",
@@ -116,9 +107,7 @@ export default {
   created() {
     this.selectSys();
   },
-  components: {
-    sysPeopleModel,
-  },
+  components: {},
   methods: {
     getAll() {
       this.selectSys();
@@ -163,7 +152,7 @@ export default {
       return y + "-" + MM + "-" + d + " " + h + ":" + m + ":" + s;
     },
     async selectSys() {
-      this.url = this.GLOBAL.baseUrl + "/admin";
+      this.url = this.GLOBAL.baseUrl + "/dep";
       this.data = {
         pageNo: this.pages.current,
         pageSize: this.pages.pageSize,
@@ -179,7 +168,7 @@ export default {
       for (let i = 0; i < this.selectedRowKeys.length; i++) {
         this.selectedId[i] = this.data[this.selectedRowKeys[i]].userId;
       }
-      this.url = this.GLOBAL.baseUrl + "/sys/user";
+      this.url = this.GLOBAL.baseUrl + "/dep";
       this.result = await API.init(this.url, this.selectedId, "del");
       this.selectSys();
       this.selectedRowKeys = [];

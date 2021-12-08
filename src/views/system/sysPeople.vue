@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="min-height: 100vh">
     <!-- 查询区域 -->
     <!-- <div>
       <a-form layout="inline" @keyup.enter.native="searchQuery">

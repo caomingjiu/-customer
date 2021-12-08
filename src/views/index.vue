@@ -1,6 +1,9 @@
 <template>
   <div>
-    <img src="../assets/fengjing.jpg" alt="" />
+    <img
+      src="https://niit-student.oss-cn-beijing.aliyuncs.com/khxt/school.jpg"
+      alt=""
+    />
   </div>
 </template>
 

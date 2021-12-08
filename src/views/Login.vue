@@ -3,7 +3,7 @@
     <div class="login-card">
       <div class="cc-col-center">
         <div class="cc-df">
-          <img src="../assets/zijin.png" alt="" class="img-zijin" />
+          <!-- <img src="../assets/zijin.png" alt="" class="img-zijin" /> -->
           <p class="font-title"><b>客户管理系统</b></p>
         </div>
         <div class="logon-t"></div>

@@ -68,9 +68,11 @@
       @change="onChange"
       @showSizeChange="onShow"
     />
+    <department-model ref="modalForm" @getAll="getAll"></department-model>
   </div>
 </template>
 <script>
+import departmentModel from "./modules/departmentModel.vue";
 const API = require("../../request/api.js");
 const columns = [
   {
@@ -107,7 +109,9 @@ export default {
   created() {
     this.selectSys();
   },
-  components: {},
+  components: {
+    departmentModel,
+  },
   methods: {
     getAll() {
       this.selectSys();
@@ -124,7 +128,7 @@ export default {
       this.selectSys();
     },
     handleAddClass() {
-      this.$refs.modalForm.title = "添加管理员";
+      this.$refs.modalForm.title = "添加公司信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.classType = "add";
       this.$refs.modalForm.roleName = "";
@@ -132,7 +136,7 @@ export default {
     handleEdit(record) {
       console.log(record);
       this.$refs.modalForm.classType = "put";
-      this.$refs.modalForm.title = "修改管理信息";
+      this.$refs.modalForm.title = "修改公司信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.fuzhi(record);
     },
@@ -166,7 +170,7 @@ export default {
     },
     async bathDel() {
       for (let i = 0; i < this.selectedRowKeys.length; i++) {
-        this.selectedId[i] = this.data[this.selectedRowKeys[i]].userId;
+        this.selectedId[i] = this.data[this.selectedRowKeys[i]].id;
       }
       this.url = this.GLOBAL.baseUrl + "/dep";
       this.result = await API.init(this.url, this.selectedId, "del");

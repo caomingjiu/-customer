@@ -45,8 +45,8 @@
               <span slot="title"
                 ><a-icon type="setting" /><span>部门管理</span></span
               >
-              <a-menu-item key="6" @click="into(5)">部门信息管理</a-menu-item>
-              <!-- <a-menu-item key="7" @click="into(10)">班级学生管理</a-menu-item> -->
+              <a-menu-item key="4" @click="into(4)">职位信息管理</a-menu-item>
+              <a-menu-item key="5" @click="into(5)">部门信息管理</a-menu-item>
             </a-sub-menu>
             <a-sub-menu key="sub3">
               <span slot="title"
@@ -54,6 +54,7 @@
               >
               <a-menu-item key="10" @click="into(6)">系统用户管理</a-menu-item>
               <a-menu-item key="11" @click="into(7)">角色信息管理</a-menu-item>
+              <a-menu-item key="12" @click="into(8)">日志信息管理</a-menu-item>
             </a-sub-menu>
             <!-- <a-sub-menu key="sub4" v-if="user.roleId == 1">
               <span slot="title"
@@ -129,7 +130,7 @@ export default {
         }
         if (i == this.panes.length) {
           this.panes.push({
-            name: "教师信息管理",
+            name: "客户信息管理",
             id: 2,
           });
           this.activeKey = 2;
@@ -152,7 +153,7 @@ export default {
         }
       }
       if (index == 4) {
-        this.$router.push("/personPic");
+        this.$router.push("/position");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {
@@ -161,7 +162,7 @@ export default {
         }
         if (i == this.panes.length) {
           this.panes.push({
-            name: "招生情况",
+            name: "职位信息管理",
             id: 4,
           });
           this.activeKey = 4;
@@ -216,7 +217,7 @@ export default {
         }
       }
       if (index == 8) {
-        this.$router.push("/subject");
+        this.$router.push("/logo");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {
@@ -225,7 +226,7 @@ export default {
         }
         if (i == this.panes.length) {
           this.panes.push({
-            name: "学课信息管理",
+            name: "日志信息管理",
             id: 8,
           });
           this.activeKey = 8;

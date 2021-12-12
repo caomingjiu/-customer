@@ -31,31 +31,6 @@ const routes = [
         component: () => import('../views/person/personTable.vue'),
       },
       {
-        path: '/genderPic',
-        name: 'genderPic',
-        component: () => import('../views/person/genderPic.vue'),
-      },
-      {
-        path: '/studentTable',
-        name: 'studentTable',
-        component: () => import('../views/person/studentTable.vue'),
-      },
-      {
-        path: '/teacherTable',
-        name: 'teacherTable',
-        component: () => import('../views/person/teacherTable.vue'),
-      },
-      {
-        path: '/classTable',
-        name: 'classTable',
-        component: () => import('../views/classroom/classTable.vue'),
-      },
-      {
-        path: '/classStudent',
-        name: 'classStudent',
-        component: () => import('../views/classroom/classStudent.vue'),
-      },
-      {
         path: '/sysPeople',
         name: 'sysPeople',
         component: () => import('../views/system/sysPeople.vue'),
@@ -66,19 +41,19 @@ const routes = [
         component: () => import('../views/system/sysRole.vue'),
       },
       {
-        path: '/semester',
-        name: 'semester',
-        component: () => import('../views/course/semester.vue'),
-      },
-      {
-        path: '/subject',
-        name: 'subject',
-        component: () => import('../views/course/subject.vue'),
+        path: '/logo',
+        name: 'logo',
+        component: () => import('../views/system/logo.vue'),
       },
       {
         path: '/department',
         name: 'department',
         component: () => import('../views/department/department.vue'),
+      },
+      {
+        path: '/position',
+        name: 'position',
+        component: () => import('../views/department/position.vue'),
       },
     ],
   },

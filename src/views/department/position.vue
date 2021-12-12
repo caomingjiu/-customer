@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="min-height: 100vh">
     <!-- 查询区域 -->
     <!-- <div>
       <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -52,6 +52,10 @@
       }"
       :pagination="false"
     >
+      <span slot="status" slot-scope="text">
+        <p v-if="text" style="color: #1890ff; margin-top: 12px">正常</p>
+        <p v-if="!text" style="color: red; margin-top: 12px">禁用</p>
+      </span>
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
       </span>
@@ -64,32 +68,29 @@
       @change="onChange"
       @showSizeChange="onShow"
     />
-    <teacher-table-model ref="modalForm" @getAll="getAll"></teacher-table-model>
+    <position-model ref="modalForm" @getAll="getAll"></position-model>
   </div>
 </template>
 <script>
+import positionModel from "./modules/positionModel.vue";
 const API = require("../../request/api.js");
-import teacherTableModel from "./modules/teacherTableModel.vue";
 const columns = [
   {
-    title: "教师名字",
-    dataIndex: "teacherName",
-    key: "teacherName",
+    title: "部门名字",
+    dataIndex: "depName",
+    key: "depName",
+    width: 150,
   },
   {
-    title: "教师性别",
-    dataIndex: "gender",
-    key: "gender",
+    title: "职业名称",
+    dataIndex: "positionName",
+    key: "positionName",
+    width: 150,
   },
   {
-    title: "入职年份",
-    dataIndex: "enrollmentYear",
-    key: "enrollmentYear",
-  },
-  {
-    title: "教师手机",
-    dataIndex: "phone",
-    key: "phone",
+    title: "职业简介",
+    dataIndex: "workContent",
+    key: "workContent",
   },
   {
     title: "操作",
@@ -116,7 +117,7 @@ export default {
     this.selectSys();
   },
   components: {
-    teacherTableModel,
+    positionModel,
   },
   methods: {
     getAll() {
@@ -134,15 +135,15 @@ export default {
       this.selectSys();
     },
     handleAddClass() {
-      this.$refs.modalForm.title = "添加教师信息";
+      this.$refs.modalForm.title = "添加职位信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.classType = "add";
-      this.$refs.modalForm.teacherName = "";
+      this.$refs.modalForm.roleName = "";
     },
     handleEdit(record) {
       console.log(record);
       this.$refs.modalForm.classType = "put";
-      this.$refs.modalForm.title = "修改教师信息";
+      this.$refs.modalForm.title = "修改职位信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.fuzhi(record);
     },
@@ -162,15 +163,13 @@ export default {
       return y + "-" + MM + "-" + d + " " + h + ":" + m + ":" + s;
     },
     async selectSys() {
-      this.url = this.GLOBAL.baseUrl + "/teacher/page";
+      this.url = this.GLOBAL.baseUrl + "/position";
       this.data = {
         pageNo: this.pages.current,
         pageSize: this.pages.pageSize,
       };
       this.result = await API.init(this.url, this.data, "get");
-      console.log(this.result);
       this.data = this.result.data.records;
-      console.log(this.data);
     },
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
@@ -180,7 +179,7 @@ export default {
       for (let i = 0; i < this.selectedRowKeys.length; i++) {
         this.selectedId[i] = this.data[this.selectedRowKeys[i]].id;
       }
-      this.url = this.GLOBAL.baseUrl + "/teacher";
+      this.url = this.GLOBAL.baseUrl + "/position";
       this.result = await API.init(this.url, this.selectedId, "del");
       this.selectSys();
       this.selectedRowKeys = [];

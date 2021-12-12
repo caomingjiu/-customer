@@ -10,42 +10,19 @@
     >
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">教师名字:</p>
+          <p style="margin-top: 5px">部门名字:</p>
         </div>
-        <a-input
-          v-model="teacherName"
-          style="width: 90%"
-          placeholder="input className"
-        />
+        <a-input v-model="name" style="width: 90%" placeholder="input name" />
       </div>
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">教师电话:</p>
+          <p style="margin-top: 5px">部门简介:</p>
         </div>
         <a-input
-          v-model="phone"
+          v-model="description"
           style="width: 90%"
-          placeholder="input className"
+          placeholder="input description"
         />
-      </div>
-      <div class="cc-df">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">入职年份:</p>
-        </div>
-        <a-input
-          v-model="year"
-          style="width: 90%"
-          placeholder="input className"
-        />
-      </div>
-      <div class="cc-df">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">教师性别:</p>
-        </div>
-        <a-radio-group name="radioGroup" v-model="gender">
-          <a-radio value="男"> 男 </a-radio>
-          <a-radio value="女"> 女 </a-radio>
-        </a-radio-group>
       </div>
     </a-modal>
   </div>
@@ -62,38 +39,25 @@ export default {
       roles: [],
       teacherId: 0,
       roleName: "",
-      teacherName: "",
-      gender: "男",
-      phone: "",
+      name: "",
+      description: "",
       year: "",
       classType: "",
       record: {},
     };
   },
-  created() {
-    this.selectRole();
-  },
+  created() {},
   methods: {
     fuzhi(record) {
       this.record = record;
-      this.teacherName = this.record.teacherName;
-      this.gender = this.record.gender;
-      this.teacherId = this.record.id;
-      this.phone = this.record.phone;
-      this.year = this.record.enrollmentYear;
-    },
-    async selectRole() {
-      this.url = this.GLOBAL.baseUrl + "/sys/role";
-      this.result = await API.init(this.url, {}, "get");
-      this.roles = this.result.data;
+      this.name = this.record.depName;
+      this.description = this.record.description;
     },
     async addSys() {
-      this.url = this.GLOBAL.baseUrl + "/teacher/add";
+      this.url = this.GLOBAL.baseUrl + "/dep";
       this.data = {
-        enrollmentYear: this.year,
-        gender: this.gender,
-        phone: this.phone,
-        teacherName: this.teacherName,
+        depName: this.name,
+        description: this.description,
       };
       this.result = await API.init(this.url, this.data, "post");
       console.log(this.result);
@@ -106,17 +70,15 @@ export default {
         this.$emit("getAll");
       }
       if (this.result.code == 50003) {
-        this.$message.error("新增失败,教师已存在");
+        this.$message.error("新增失败,学生已存在");
       }
     },
     async putSys() {
-      this.url = this.GLOBAL.baseUrl + "/teacher";
+      this.url = this.GLOBAL.baseUrl + "/dep";
       this.data = {
-        enrollmentYear: this.year,
-        gender: this.gender,
-        phone: this.phone,
-        teacherName: this.teacherName,
-        id: this.teacherId,
+        depName: this.name,
+        description: this.description,
+        id: this.record.id,
       };
       this.result = await API.init(this.url, this.data, "put");
       console.log(this.result);

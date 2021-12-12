@@ -1,39 +1,7 @@
 <template>
-  <div>
-    <!-- 查询区域 -->
-    <!-- <div>
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :span="6">
-            <a-form-item label="标题">
-              <a-input placeholder="请输入标题"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="8">
-            <span
-              style="float: left; overflow: hidden"
-              class="table-page-search-submitButtons"
-            >
-              <a-button type="primary" @click="searchQuery" icon="search"
-                >查询</a-button
-              >
-              <a-button
-                type="primary"
-                @click="searchReset"
-                icon="reload"
-                style="margin-left: 8px"
-                >重置</a-button
-              >
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div> -->
+  <div style="min-height: 100vh">
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button type="primary" @click="handleAddClass" icon="plus"
-        >新增</a-button
-      >
       <a-button
         v-if="selectedRowKeys.length > 0"
         ghost
@@ -52,8 +20,9 @@
       }"
       :pagination="false"
     >
-      <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
+      <span slot="status" slot-scope="text">
+        <p v-if="text" style="color: #1890ff; margin-top: 12px">正常</p>
+        <p v-if="!text" style="color: red; margin-top: 12px">禁用</p>
       </span>
     </a-table>
     <a-pagination
@@ -64,39 +33,29 @@
       @change="onChange"
       @showSizeChange="onShow"
     />
-    <student-table-model ref="modalForm" @getAll="getAll"></student-table-model>
+    <sys-people-model ref="modalForm" @getAll="getAll"></sys-people-model>
   </div>
 </template>
 <script>
 const API = require("../../request/api.js");
-import studentTableModel from "./modules/studentTableModel.vue";
+import sysPeopleModel from "./modules/sysPeopleModel.vue";
 const columns = [
   {
-    title: "学生名字",
-    dataIndex: "studentName",
-    key: "studentName",
+    title: "管理名字",
+    dataIndex: "adminName",
+    key: "adminName",
   },
   {
-    title: "学生性别",
-    dataIndex: "gender",
-    key: "gender",
+    title: "手机号",
+    dataIndex: "phone",
+    key: "phone",
   },
   {
-    title: "学生生日",
-    dataIndex: "birthday",
-    key: "birthday",
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createTime",
-    key: "createTime",
-  },
-  {
-    title: "操作",
-    dataIndex: "action",
-    scopedSlots: { customRender: "action" },
-    align: "center",
-    width: 150,
+    title: "状态",
+    dataIndex: "status",
+    key: "status",
+    slots: { title: "customTitle" },
+    scopedSlots: { customRender: "status" },
   },
 ];
 export default {
@@ -116,7 +75,7 @@ export default {
     this.selectSys();
   },
   components: {
-    studentTableModel,
+    sysPeopleModel,
   },
   methods: {
     getAll() {
@@ -134,15 +93,15 @@ export default {
       this.selectSys();
     },
     handleAddClass() {
-      this.$refs.modalForm.title = "添加学生信息";
+      this.$refs.modalForm.title = "添加管理员";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.classType = "add";
-      this.$refs.modalForm.teacherName = "";
+      this.$refs.modalForm.roleName = "";
     },
     handleEdit(record) {
       console.log(record);
       this.$refs.modalForm.classType = "put";
-      this.$refs.modalForm.title = "修改学生信息";
+      this.$refs.modalForm.title = "修改管理信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.fuzhi(record);
     },
@@ -162,19 +121,13 @@ export default {
       return y + "-" + MM + "-" + d + " " + h + ":" + m + ":" + s;
     },
     async selectSys() {
-      this.url = this.GLOBAL.baseUrl + "/stu";
+      this.url = this.GLOBAL.baseUrl + "/log";
       this.data = {
         pageNo: this.pages.current,
         pageSize: this.pages.pageSize,
       };
       this.result = await API.init(this.url, this.data, "get");
-      console.log(this.result);
       this.data = this.result.data.records;
-      for (let i = 0; i < this.data.length; i++) {
-        this.data[i].birthday = this.formatDateTime(this.data[i].birthday);
-        this.data[i].createTime = this.formatDateTime(this.data[i].createTime);
-      }
-      console.log(this.data);
     },
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
@@ -182,9 +135,9 @@ export default {
     },
     async bathDel() {
       for (let i = 0; i < this.selectedRowKeys.length; i++) {
-        this.selectedId[i] = this.data[this.selectedRowKeys[i]].id;
+        this.selectedId[i] = this.data[this.selectedRowKeys[i]].userId;
       }
-      this.url = this.GLOBAL.baseUrl + "/stu";
+      this.url = this.GLOBAL.baseUrl + "/log";
       this.result = await API.init(this.url, this.selectedId, "del");
       this.selectSys();
       this.selectedRowKeys = [];

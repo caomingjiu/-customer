@@ -144,7 +144,7 @@ export default {
       this.selectSys();
     },
     handleAddClass() {
-      this.$refs.modalForm.title = "添加学生信息";
+      this.$refs.modalForm.title = "添加员工信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.classType = "add";
       this.$refs.modalForm.teacherName = "";
@@ -152,7 +152,7 @@ export default {
     handleEdit(record) {
       console.log(record);
       this.$refs.modalForm.classType = "put";
-      this.$refs.modalForm.title = "修改学生信息";
+      this.$refs.modalForm.title = "修改员工信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.fuzhi(record);
     },

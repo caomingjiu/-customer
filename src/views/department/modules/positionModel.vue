@@ -10,28 +10,37 @@
     >
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">学生名字:</p>
+          <p style="margin-top: 5px">职业名字:</p>
+        </div>
+        <a-input v-model="name" style="width: 90%" placeholder="input name" />
+      </div>
+      <div class="cc-df">
+        <div style="width: 70px">
+          <p style="margin-top: 5px">职业简介:</p>
         </div>
         <a-input
-          v-model="teacherName"
+          v-model="description"
           style="width: 90%"
-          placeholder="input className"
+          placeholder="input description"
         />
       </div>
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">学生生日:</p>
+          <p style="margin-top: 5px">部门名称:</p>
         </div>
-        <a-date-picker style="width: 90%" @change="onChange" />
-      </div>
-      <div class="cc-df">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">学生性别:</p>
-        </div>
-        <a-radio-group name="radioGroup" v-model="gender">
-          <a-radio value="男"> 男 </a-radio>
-          <a-radio value="女"> 女 </a-radio>
-        </a-radio-group>
+        <a-select
+          style="width: 90%"
+          show-search
+          v-model="value"
+          placeholder="Select a role"
+          option-filter-prop="children"
+          :filter-option="filterOption"
+          @change="handleChange"
+        >
+          <a-select-option v-for="(item, index) in database" :key="index">
+            {{ item.depName }}
+          </a-select-option>
+        </a-select>
       </div>
     </a-modal>
   </div>
@@ -45,38 +54,54 @@ export default {
       ModalText: "Content of the modal",
       visible: false,
       confirmLoading: false,
-      roles: [],
+      database: [],
+      value: "",
+      id: 0,
       teacherId: 0,
       roleName: "",
-      teacherName: "",
-      gender: "男",
-      birthday: "",
-      phone: "",
+      name: "",
+      description: "",
       year: "",
       classType: "",
       record: {},
     };
   },
-  created() {},
+  created() {
+    this.selectData();
+  },
   methods: {
-    onChange(date, dateString) {
-      console.log(date, dateString);
-      this.birthday = dateString + " 00:00:00";
-    },
     fuzhi(record) {
       this.record = record;
-      this.teacherName = this.record.teacherName;
-      this.gender = this.record.gender;
-      this.teacherId = this.record.id;
-      this.phone = this.record.phone;
-      this.year = this.record.enrollmentYear;
+      this.name = this.record.depName;
+      this.description = this.record.description;
+    },
+    //选择器
+    handleChange(value) {
+      // console.log(`selected ${value}`);
+      for (let i = 0; i < this.database.length; i++) {
+        if (this.database[value].depName == this.database[i].depName) {
+          this.id = this.database[i].id;
+        }
+      }
+      console.log(`selected ${this.id}`);
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
+    },
+    async selectData() {
+      this.url = this.GLOBAL.baseUrl + "/dep/list";
+      this.result = await API.init(this.url, {}, "get");
+      this.database = this.result.data;
     },
     async addSys() {
-      this.url = this.GLOBAL.baseUrl + "/stu";
+      this.url = this.GLOBAL.baseUrl + "/dep";
       this.data = {
-        birthday: this.birthday,
-        gender: this.gender,
-        studentName: this.teacherName,
+        depName: this.name,
+        description: this.description,
       };
       this.result = await API.init(this.url, this.data, "post");
       console.log(this.result);
@@ -93,13 +118,11 @@ export default {
       }
     },
     async putSys() {
-      this.url = this.GLOBAL.baseUrl + "/teacher";
+      this.url = this.GLOBAL.baseUrl + "/dep";
       this.data = {
-        enrollmentYear: this.year,
-        gender: this.gender,
-        phone: this.phone,
-        teacherName: this.teacherName,
-        id: this.teacherId,
+        depName: this.name,
+        description: this.description,
+        id: this.record.id,
       };
       this.result = await API.init(this.url, this.data, "put");
       console.log(this.result);

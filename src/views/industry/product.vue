@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="min-height: 100vh">
     <!-- 查询区域 -->
     <!-- <div>
       <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -52,9 +52,8 @@
       }"
       :pagination="false"
     >
-      <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
-        <a @click="handleAddStudents(record)" class="cc-mleft">分班</a>
+      <span slot="img" slot-scope="text">
+        <img :src="text" style="width: 30px" @click="clImg(text)" />
       </span>
     </a-table>
     <a-pagination
@@ -65,41 +64,49 @@
       @change="onChange"
       @showSizeChange="onShow"
     />
-    <class-model ref="modalForm" @getAll="getAll"></class-model>
-    <add-student-class ref="modalForm1" @getAll="getAll"></add-student-class>
+    <div v-if="imgIstrue" class="img-address">
+      <a-icon
+        type="close"
+        :style="{ fontSize: '16px', color: '#08c' }"
+        class="icon-address"
+        @click="imgIstrue = false"
+      />
+      <img :src="backImg" alt="" />
+    </div>
+    <product-model ref="modalForm" @getAll="getAll"></product-model>
   </div>
 </template>
 <script>
 const API = require("../../request/api.js");
-import ClassModel from "./modules/classModel.vue";
-import addStudentClass from "./modules/addStudentClass.vue";
+import productModel from "./modules/productModel.vue";
 const columns = [
   {
-    title: "班级名字",
-    dataIndex: "className",
-    key: "className",
+    title: "产品名称",
+    dataIndex: "productName",
+    key: "productName",
+    width: 300,
   },
   {
-    title: "教师名字",
-    dataIndex: "teacherName",
-    key: "teacherName",
+    title: "产品类型",
+    dataIndex: "productType",
+    key: "productType",
   },
   {
-    title: "教师性别",
-    dataIndex: "gender",
-    key: "gender",
+    title: "产品价格",
+    dataIndex: "price",
+    key: "price",
   },
   {
-    title: "教师电话",
-    dataIndex: "phone",
-    key: "phone",
+    title: "产品库存",
+    dataIndex: "repertory",
+    key: "repertory",
   },
   {
-    title: "操作",
-    dataIndex: "action",
-    scopedSlots: { customRender: "action" },
-    align: "center",
-    width: 150,
+    title: "产品照片",
+    dataIndex: "img",
+    key: "img",
+    slots: { title: "customTitle" },
+    scopedSlots: { customRender: "img" },
   },
 ];
 export default {
@@ -107,6 +114,8 @@ export default {
     return {
       data: [],
       columns,
+      imgIstrue: false,
+      backImg: "",
       selectedRowKeys: [],
       selectedId: [],
       pages: {
@@ -116,29 +125,33 @@ export default {
     };
   },
   created() {
-    this.selectClass();
+    this.selectSys();
   },
   components: {
-    ClassModel,
-    addStudentClass,
+    productModel,
   },
   methods: {
+    clImg(index) {
+      console.log(index);
+      this.backImg = index;
+      this.imgIstrue = true;
+    },
     getAll() {
-      this.selectClass();
+      this.selectSys();
     },
     //分页
     onChange(current, pageSize) {
       this.pages.current = current;
       this.pages.pageSize = pageSize;
-      this.selectClass();
+      this.selectSys();
     },
     onShow(current, pageSize) {
       this.pages.current = current;
       this.pages.pageSize = pageSize;
-      this.selectClass();
+      this.selectSys();
     },
     handleAddClass() {
-      this.$refs.modalForm.title = "添加班级";
+      this.$refs.modalForm.title = "添加员工信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.classType = "add";
       this.$refs.modalForm.teacherName = "";
@@ -146,15 +159,9 @@ export default {
     handleEdit(record) {
       console.log(record);
       this.$refs.modalForm.classType = "put";
-      this.$refs.modalForm.title = "修改班主任";
+      this.$refs.modalForm.title = "修改员工信息";
       this.$refs.modalForm.visible = true;
       this.$refs.modalForm.fuzhi(record);
-    },
-    handleAddStudents(record) {
-      console.log(record);
-      this.$refs.modalForm1.title = "学生分班管理";
-      this.$refs.modalForm1.visible = true;
-      this.$refs.modalForm1.fuzhi(record);
     },
     formatDateTime(value) {
       let date = new Date(value);
@@ -171,16 +178,14 @@ export default {
       s = s < 10 ? "0" + s : s;
       return y + "-" + MM + "-" + d + " " + h + ":" + m + ":" + s;
     },
-    async selectClass() {
-      this.url = this.GLOBAL.baseUrl + "/clazz";
+    async selectSys() {
+      this.url = this.GLOBAL.baseUrl + "/product";
       this.data = {
         pageNo: this.pages.current,
         pageSize: this.pages.pageSize,
       };
       this.result = await API.init(this.url, this.data, "get");
-      console.log(this.result);
       this.data = this.result.data.records;
-      console.log(this.data);
     },
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
@@ -190,15 +195,32 @@ export default {
       for (let i = 0; i < this.selectedRowKeys.length; i++) {
         this.selectedId[i] = this.data[this.selectedRowKeys[i]].id;
       }
-      this.url = this.GLOBAL.baseUrl + "/clazz";
+      this.url = this.GLOBAL.baseUrl + "/product";
       this.result = await API.init(this.url, this.selectedId, "del");
-      this.selectClass();
+      this.selectSys();
       this.selectedRowKeys = [];
     },
   },
 };
 </script>
 <style scoped>
+.icon-address {
+  position: relative;
+  top: 30px;
+  left: 90%;
+  cursor: pointer;
+}
+.img-address {
+  width: 400px;
+  height: 400px;
+  position: fixed;
+  top: 20%;
+  left: 45%;
+}
+.img-address img {
+  width: 100%;
+  height: 100%;
+}
 .address {
   margin-left: 65%;
   margin-top: 10px;

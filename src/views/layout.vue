@@ -36,10 +36,10 @@
               <span slot="title"
                 ><a-icon type="setting" /><span>人事管理</span></span
               >
-              <a-menu-item key="2" @click="into(1)">员工信息管理</a-menu-item>
-              <a-menu-item key="3" @click="into(2)">客户信息管理</a-menu-item>
-              <!-- <a-menu-item key="4" @click="into(3)">学生男女生比例</a-menu-item>
-              <a-menu-item key="5" @click="into(4)">招生情况</a-menu-item> -->
+              <a-menu-item key="1" @click="into(1)">员工信息管理</a-menu-item>
+              <a-menu-item key="2" @click="into(2)">客户信息管理</a-menu-item>
+              <a-menu-item key="3" @click="into(3)">反馈信息管理</a-menu-item>
+              <!-- <a-menu-item key="5" @click="into(4)">招生情况</a-menu-item> -->
             </a-sub-menu>
             <a-sub-menu key="sub2">
               <span slot="title"
@@ -56,13 +56,13 @@
               <a-menu-item key="11" @click="into(7)">角色信息管理</a-menu-item>
               <a-menu-item key="12" @click="into(8)">日志信息管理</a-menu-item>
             </a-sub-menu>
-            <!-- <a-sub-menu key="sub4" v-if="user.roleId == 1">
+            <a-sub-menu key="sub4">
               <span slot="title"
-                ><a-icon type="setting" /><span>课程管理</span></span
+                ><a-icon type="setting" /><span>产业管理</span></span
               >
-              <a-menu-item key="12" @click="into(8)">学课信息管理</a-menu-item>
-              <a-menu-item key="13" @click="into(9)">学期信息管理</a-menu-item>
-            </a-sub-menu> -->
+              <a-menu-item key="15" @click="into(10)">产品信息管理</a-menu-item>
+              <a-menu-item key="16" @click="into(11)">计划信息管理</a-menu-item>
+            </a-sub-menu>
           </a-menu>
         </div>
       </div>
@@ -137,7 +137,7 @@ export default {
         }
       }
       if (index == 3) {
-        this.$router.push("/genderPic");
+        this.$router.push("/feedback");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {
@@ -146,7 +146,7 @@ export default {
         }
         if (i == this.panes.length) {
           this.panes.push({
-            name: "学生男女生比例",
+            name: "反馈信息管理",
             id: 3,
           });
           this.activeKey = 3;
@@ -249,7 +249,7 @@ export default {
         }
       }
       if (index == 10) {
-        this.$router.push("/classStudent");
+        this.$router.push("/product");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {
@@ -258,10 +258,26 @@ export default {
         }
         if (i == this.panes.length) {
           this.panes.push({
-            name: "班级学生管理",
+            name: "产品信息管理",
             id: 10,
           });
           this.activeKey = 10;
+        }
+      }
+      if (index == 11) {
+        this.$router.push("/plan");
+        let i = 0;
+        for (; i < this.panes.length; i++) {
+          if (this.panes[i].id == index) {
+            break;
+          }
+        }
+        if (i == this.panes.length) {
+          this.panes.push({
+            name: "计划信息管理",
+            id: 11,
+          });
+          this.activeKey = 11;
         }
       }
     },

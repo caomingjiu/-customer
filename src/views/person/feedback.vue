@@ -1,28 +1,36 @@
 <template>
-  <div>
+  <div style="min-height: 100vh">
     <!-- 查询区域 -->
-    <div class="cc-df">
-      <div style="width: 60px">
-        <p style="margin-top: 5px">班级名:</p>
-      </div>
-      <a-select
-        style="width: 30%"
-        show-search
-        placeholder="Select a teacher"
-        option-filter-prop="children"
-        :filter-option="filterOption"
-        @change="handleChange"
-      >
-        <a-select-option v-for="(item, index) in classes" :key="index">
-          {{ item.className }}
-        </a-select-option>
-      </a-select>
-    </div>
+    <!-- <div>
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
+        <a-row :gutter="24">
+          <a-col :span="6">
+            <a-form-item label="标题">
+              <a-input placeholder="请输入标题"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <span
+              style="float: left; overflow: hidden"
+              class="table-page-search-submitButtons"
+            >
+              <a-button type="primary" @click="searchQuery" icon="search"
+                >查询</a-button
+              >
+              <a-button
+                type="primary"
+                @click="searchReset"
+                icon="reload"
+                style="margin-left: 8px"
+                >重置</a-button
+              >
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div> -->
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button type="primary" @click="handleAddClass" icon="plus"
-        >新增</a-button
-      >
       <a-button
         v-if="selectedRowKeys.length > 0"
         ghost
@@ -41,28 +49,51 @@
       }"
       :pagination="false"
     >
+      <span slot="status" slot-scope="text">
+        <p v-if="text == 0" style="color: #1890ff; margin-top: 12px">未处理</p>
+        <p v-if="text == 1" style="color: #99ff33; margin-top: 12px">已处理</p>
+        <p v-if="text == 2" style="color: red; margin-top: 12px">已退回</p>
+      </span>
     </a-table>
-    <add-student-class ref="modalForm" @getAll="getAll"></add-student-class>
+    <a-pagination
+      class="address"
+      :total="result.data.total"
+      show-size-changer
+      show-quick-jumper
+      @change="onChange"
+      @showSizeChange="onShow"
+    />
   </div>
 </template>
 <script>
 const API = require("../../request/api.js");
-import addStudentClass from "./modules/addStudentClass.vue";
 const columns = [
   {
-    title: "学生名字",
-    dataIndex: "studentName",
-    key: "studentName",
+    title: "反馈内容",
+    dataIndex: "content",
+    key: "content",
   },
   {
-    title: "学生性别",
-    dataIndex: "gender",
-    key: "gender",
+    title: "客户姓名",
+    dataIndex: "cuName",
+    key: "cuName",
   },
   {
-    title: "学生生日",
-    dataIndex: "birthday",
-    key: "birthday",
+    title: "产品名称",
+    dataIndex: "productName",
+    key: "productName",
+  },
+  {
+    title: "处理人",
+    dataIndex: "employeeName",
+    key: "employeeName",
+  },
+  {
+    title: "状态",
+    dataIndex: "status",
+    key: "status",
+    slots: { title: "customTitle" },
+    scopedSlots: { customRender: "status" },
   },
 ];
 export default {
@@ -76,38 +107,39 @@ export default {
         current: 1,
         pageSize: 10,
       },
-      classes: [],
-      classId: 0,
     };
   },
   created() {
-    this.selectClass();
+    this.selectSys();
   },
-  components: {
-    addStudentClass,
-  },
+  components: {},
   methods: {
     getAll() {
-      this.selectClass();
+      this.selectSys();
     },
     //分页
     onChange(current, pageSize) {
       this.pages.current = current;
       this.pages.pageSize = pageSize;
-      this.selectClass();
+      this.selectSys();
     },
     onShow(current, pageSize) {
       this.pages.current = current;
       this.pages.pageSize = pageSize;
-      this.selectClass();
+      this.selectSys();
     },
     handleAddClass() {
-      this.$refs.modalForm.title = "学生分班管理";
+      this.$refs.modalForm.title = "添加员工信息";
       this.$refs.modalForm.visible = true;
-      const record = {
-        id: this.classId,
-      };
-      this.$refs.modalForm1.fuzhi(record);
+      this.$refs.modalForm.classType = "add";
+      this.$refs.modalForm.teacherName = "";
+    },
+    handleEdit(record) {
+      console.log(record);
+      this.$refs.modalForm.classType = "put";
+      this.$refs.modalForm.title = "修改员工信息";
+      this.$refs.modalForm.visible = true;
+      this.$refs.modalForm.fuzhi(record);
     },
     formatDateTime(value) {
       let date = new Date(value);
@@ -124,35 +156,14 @@ export default {
       s = s < 10 ? "0" + s : s;
       return y + "-" + MM + "-" + d + " " + h + ":" + m + ":" + s;
     },
-    //select
-    handleChange(value) {
-      // console.log(`selected ${value}`);
-      this.classId = this.classes[value].id;
-      console.log(`selected ${this.classId}`);
-      this.selectStudent();
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
-    },
-    async selectClass() {
-      this.url = this.GLOBAL.baseUrl + "/clazz";
+    async selectSys() {
+      this.url = this.GLOBAL.baseUrl + "/feedback";
       this.data = {
-        className: "",
+        pageNo: this.pages.current,
+        pageSize: this.pages.pageSize,
       };
       this.result = await API.init(this.url, this.data, "get");
-      this.classes = this.result.data.records;
-    },
-    async selectStudent() {
-      this.url = this.GLOBAL.baseUrl + "/clazz/stu";
-      this.data = {
-        clazzId: this.classId,
-      };
-      this.result = await API.init(this.url, this.data, "get");
-      this.data = this.result.data;
+      this.data = this.result.data.records;
     },
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
@@ -162,9 +173,9 @@ export default {
       for (let i = 0; i < this.selectedRowKeys.length; i++) {
         this.selectedId[i] = this.data[this.selectedRowKeys[i]].id;
       }
-      this.url = this.GLOBAL.baseUrl + "/stu/class";
+      this.url = this.GLOBAL.baseUrl + "/feedback";
       this.result = await API.init(this.url, this.selectedId, "del");
-      this.selectStudent();
+      this.selectSys();
       this.selectedRowKeys = [];
     },
   },

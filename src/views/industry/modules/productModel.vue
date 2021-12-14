@@ -9,31 +9,52 @@
       @cancel="handleCancel"
     >
       <div class="cc-df">
-        <div style="width: 60px" v-if="classType == 'add'">
-          <p style="margin-top: 5px">班级名:</p>
+        <div style="width: 70px">
+          <p style="margin-top: 5px">管理名字:</p>
         </div>
         <a-input
-          v-if="classType == 'add'"
-          v-model="className"
+          v-model="sysName"
           style="width: 90%"
           placeholder="input className"
         />
       </div>
       <div class="cc-df">
-        <div style="width: 60px">
-          <p style="margin-top: 5px">教师名:</p>
+        <div style="width: 70px">
+          <p style="margin-top: 5px">管理密码:</p>
+        </div>
+        <a-input-password
+          v-model="sysPassword"
+          style="width: 90%"
+          placeholder="input className"
+        />
+      </div>
+      <div class="cc-df" v-if="this.classType == 'put'">
+        <div style="width: 70px">
+          <p style="margin-top: 5px">是否禁用:</p>
+        </div>
+        <a-switch
+          style="margin-top: 5px"
+          checked-children="正常"
+          un-checked-children="禁用"
+          @change="switchButton"
+          v-model="isTrue"
+        />
+      </div>
+      <div class="cc-df">
+        <div style="width: 70px">
+          <p style="margin-top: 5px">角色名称:</p>
         </div>
         <a-select
           style="width: 90%"
           show-search
-          v-model="teacherName"
-          placeholder="Select a teacher"
+          v-model="roleName"
+          placeholder="Select a role"
           option-filter-prop="children"
           :filter-option="filterOption"
           @change="handleChange"
         >
-          <a-select-option v-for="(item, index) in teachers" :key="index">
-            {{ item.teacherName }}
+          <a-select-option v-for="(item, index) in roles" :key="index">
+            {{ item.roleName }}
           </a-select-option>
         </a-select>
       </div>
@@ -49,40 +70,41 @@ export default {
       ModalText: "Content of the modal",
       visible: false,
       confirmLoading: false,
-      teachers: [],
-      teacherId: 0,
-      teacherName: "",
-      className: "",
+      roles: [],
+      roleId: 0,
+      roleName: "",
+      sysName: "",
+      sysPassword: "",
       classType: "",
       record: {},
+      isTrue: true,
     };
   },
   created() {
-    this.selectTeacher();
+    this.selectRole();
   },
   methods: {
     fuzhi(record) {
       this.record = record;
-      for (let i = 0; i < this.teachers.length; i++) {
-        if (this.record.teacherName == this.teachers[i].teacherName) {
-          this.teacherId = this.teachers[i].id;
+      this.isTrue = this.record.status;
+      for (let i = 0; i < this.roles.length; i++) {
+        if (this.record.roleName == this.roles[i].roleName) {
+          this.roleId = this.roles[i].id;
         }
       }
-      this.teacherName = this.record.teacherName;
-      console.log(this.teacherName);
+      this.roleName = this.record.roleName;
     },
-    async selectTeacher() {
-      this.url = this.GLOBAL.baseUrl + "/teacher";
+    async selectRole() {
+      this.url = this.GLOBAL.baseUrl + "/sys/role";
       this.result = await API.init(this.url, {}, "get");
-      console.log(this.result);
-      this.teachers = this.result.data;
-      console.log(this.teachers);
+      this.roles = this.result.data;
     },
-    async addClass() {
-      this.url = this.GLOBAL.baseUrl + "/clazz";
+    async addSys() {
+      this.url = this.GLOBAL.baseUrl + "/sys/user/register";
       this.data = {
-        className: this.className,
-        teacherId: this.teacherId,
+        password: this.sysPassword,
+        roleId: this.roleId,
+        userName: this.sysName,
       };
       this.result = await API.init(this.url, this.data, "post");
       console.log(this.result);
@@ -95,16 +117,22 @@ export default {
         this.$emit("getAll");
       }
       if (this.result.code == 50003) {
-        this.$message.error("新增失败，班级已存在");
+        this.$message.error("新增失败");
+      }
+      if (this.result.code == 20010) {
+        this.$message.error("新增失败，用户已存在");
       }
     },
-    async putClass() {
-      this.url = this.GLOBAL.baseUrl + "/clazz/teacher";
+    async putSys() {
+      this.url = this.GLOBAL.baseUrl + "/sys/user";
       this.data = {
-        clazzId: this.record.id,
-        teacherId: this.teacherId,
+        roleId: this.roleId,
+        status: this.isTrue,
+        sysUserName: this.sysName,
+        sysUserPassword: this.sysPassword,
+        userId: this.record.userId,
       };
-      this.result = await API.init(this.url, this.data, "post");
+      this.result = await API.init(this.url, this.data, "put");
       console.log(this.result);
       if (this.result.code == 1) {
         this.$message({
@@ -121,12 +149,12 @@ export default {
     //选择器
     handleChange(value) {
       // console.log(`selected ${value}`);
-      for (let i = 0; i < this.teachers.length; i++) {
-        if (this.teachers[value].teacherName == this.teachers[i].teacherName) {
-          this.teacherId = this.teachers[i].id;
+      for (let i = 0; i < this.roles.length; i++) {
+        if (this.roles[value].roleName == this.roles[i].roleName) {
+          this.roleId = this.roles[i].id;
         }
       }
-      console.log(`selected ${this.teacherId}`);
+      console.log(`selected ${this.roleId}`);
     },
     filterOption(input, option) {
       return (
@@ -142,16 +170,20 @@ export default {
       setTimeout(() => {
         this.confirmLoading = false;
         if (this.classType == "add") {
-          this.addClass();
+          this.addSys();
         }
         if (this.classType == "put") {
-          this.putClass();
+          this.putSys();
         }
       }, 2000);
     },
     handleCancel(e) {
       console.log("Clicked cancel button");
       this.visible = false;
+    },
+    //switch
+    switchButton(checked, event) {
+      console.log(checked);
     },
   },
 };

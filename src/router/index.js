@@ -20,6 +20,7 @@ const routes = [
         name: 'Index',
         component: () => import('../views/index.vue'),
       },
+      //人事模块
       {
         path: '/personpic',
         name: 'personPic',
@@ -30,6 +31,12 @@ const routes = [
         name: 'personTable',
         component: () => import('../views/person/personTable.vue'),
       },
+      {
+        path: '/feedback',
+        name: 'feedback',
+        component: () => import('../views/person/feedback.vue'),
+      },
+      //系统模块
       {
         path: '/sysPeople',
         name: 'sysPeople',
@@ -45,6 +52,7 @@ const routes = [
         name: 'logo',
         component: () => import('../views/system/logo.vue'),
       },
+      //部门模块
       {
         path: '/department',
         name: 'department',
@@ -54,6 +62,17 @@ const routes = [
         path: '/position',
         name: 'position',
         component: () => import('../views/department/position.vue'),
+      },
+      //产业模块
+      {
+        path: '/product',
+        name: 'product',
+        component: () => import('../views/industry/product.vue'),
+      },
+      {
+        path: '/plan',
+        name: 'plan',
+        component: () => import('../views/industry/plan.vue'),
       },
     ],
   },

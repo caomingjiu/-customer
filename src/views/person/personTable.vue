@@ -93,8 +93,8 @@ const columns = [
   },
   {
     title: "职位",
-    dataIndex: "employeeType",
-    key: "employeeType",
+    dataIndex: "positionName",
+    key: "positionName",
   },
   {
     title: "电话",

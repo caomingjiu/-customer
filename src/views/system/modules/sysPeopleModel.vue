@@ -40,24 +40,6 @@
           v-model="isTrue"
         />
       </div>
-      <div class="cc-df">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">角色名称:</p>
-        </div>
-        <a-select
-          style="width: 90%"
-          show-search
-          v-model="roleName"
-          placeholder="Select a role"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          @change="handleChange"
-        >
-          <a-select-option v-for="(item, index) in roles" :key="index">
-            {{ item.roleName }}
-          </a-select-option>
-        </a-select>
-      </div>
     </a-modal>
   </div>
 </template>
@@ -145,23 +127,6 @@ export default {
       if (this.result.code == 50001) {
         this.$message.error("修改失败");
       }
-    },
-    //选择器
-    handleChange(value) {
-      // console.log(`selected ${value}`);
-      for (let i = 0; i < this.roles.length; i++) {
-        if (this.roles[value].roleName == this.roles[i].roleName) {
-          this.roleId = this.roles[i].id;
-        }
-      }
-      console.log(`selected ${this.roleId}`);
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
     },
     //model
     handleOk(e) {

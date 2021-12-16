@@ -71,9 +71,11 @@ export default {
   },
   methods: {
     fuzhi(record) {
+      console.log(record);
       this.record = record;
-      this.name = this.record.depName;
-      this.description = this.record.description;
+      this.name = this.record.positionName;
+      this.description = this.record.workContent;
+      this.value = this.record.depName;
     },
     //选择器
     handleChange(value) {
@@ -98,10 +100,11 @@ export default {
       this.database = this.result.data;
     },
     async addSys() {
-      this.url = this.GLOBAL.baseUrl + "/dep";
+      this.url = this.GLOBAL.baseUrl + "/position";
       this.data = {
-        depName: this.name,
-        description: this.description,
+        depId: this.id,
+        positionName: this.name,
+        workContent: this.description,
       };
       this.result = await API.init(this.url, this.data, "post");
       console.log(this.result);
@@ -118,10 +121,11 @@ export default {
       }
     },
     async putSys() {
-      this.url = this.GLOBAL.baseUrl + "/dep";
+      this.url = this.GLOBAL.baseUrl + "/position";
       this.data = {
-        depName: this.name,
-        description: this.description,
+        depId: this.id,
+        positionName: this.name,
+        workContent: this.description,
         id: this.record.id,
       };
       this.result = await API.init(this.url, this.data, "put");

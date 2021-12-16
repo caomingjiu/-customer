@@ -1,39 +1,7 @@
 <template>
   <div style="min-height: 100vh">
-    <!-- 查询区域 -->
-    <!-- <div>
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :span="6">
-            <a-form-item label="标题">
-              <a-input placeholder="请输入标题"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="8">
-            <span
-              style="float: left; overflow: hidden"
-              class="table-page-search-submitButtons"
-            >
-              <a-button type="primary" @click="searchQuery" icon="search"
-                >查询</a-button
-              >
-              <a-button
-                type="primary"
-                @click="searchReset"
-                icon="reload"
-                style="margin-left: 8px"
-                >重置</a-button
-              >
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div> -->
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
-      <a-button type="primary" @click="handleAddClass" icon="plus"
-        >新增</a-button
-      >
+    <div class="table-operator" style="height: 37px">
       <a-button
         v-if="selectedRowKeys.length > 0"
         ghost
@@ -52,12 +20,16 @@
       }"
       :pagination="false"
     >
+      <span slot="img" slot-scope="text">
+        <img
+          :src="text"
+          style="width: 30px; margin-left: 15px"
+          @click="clImg(text)"
+        />
+      </span>
       <span slot="status" slot-scope="text">
         <p v-if="text" style="color: #1890ff; margin-top: 12px">正常</p>
         <p v-if="!text" style="color: red; margin-top: 12px">禁用</p>
-      </span>
-      <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
       </span>
     </a-table>
     <a-pagination
@@ -68,12 +40,10 @@
       @change="onChange"
       @showSizeChange="onShow"
     />
-    <sys-people-model ref="modalForm" @getAll="getAll"></sys-people-model>
   </div>
 </template>
 <script>
 const API = require("../../request/api.js");
-import sysPeopleModel from "./modules/sysPeopleModel.vue";
 const columns = [
   {
     title: "管理名字",
@@ -86,18 +56,18 @@ const columns = [
     key: "phone",
   },
   {
+    title: "用户头像",
+    dataIndex: "avatar",
+    key: "avatar",
+    slots: { title: "customTitle" },
+    scopedSlots: { customRender: "img" },
+  },
+  {
     title: "状态",
     dataIndex: "status",
     key: "status",
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "status" },
-  },
-  {
-    title: "操作",
-    dataIndex: "action",
-    scopedSlots: { customRender: "action" },
-    align: "center",
-    width: 150,
   },
 ];
 export default {
@@ -116,9 +86,7 @@ export default {
   created() {
     this.selectSys();
   },
-  components: {
-    sysPeopleModel,
-  },
+  components: {},
   methods: {
     getAll() {
       this.selectSys();

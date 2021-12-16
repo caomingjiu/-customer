@@ -42,7 +42,7 @@
       </div>
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">学生性别:</p>
+          <p style="margin-top: 5px">员工性别:</p>
         </div>
         <a-radio-group name="radioGroup" v-model="gender">
           <a-radio value="男"> 男 </a-radio>

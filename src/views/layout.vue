@@ -53,7 +53,6 @@
                 ><a-icon type="setting" /><span>权限管理</span></span
               >
               <a-menu-item key="10" @click="into(6)">系统用户管理</a-menu-item>
-              <a-menu-item key="11" @click="into(7)">角色信息管理</a-menu-item>
               <a-menu-item key="12" @click="into(8)">日志信息管理</a-menu-item>
             </a-sub-menu>
             <a-sub-menu key="sub4">

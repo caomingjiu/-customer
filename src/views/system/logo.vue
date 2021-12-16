@@ -1,7 +1,7 @@
 <template>
   <div style="min-height: 100vh">
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" style="height: 37px">
       <a-button
         v-if="selectedRowKeys.length > 0"
         ghost
@@ -41,14 +41,14 @@ const API = require("../../request/api.js");
 import sysPeopleModel from "./modules/sysPeopleModel.vue";
 const columns = [
   {
-    title: "管理名字",
-    dataIndex: "adminName",
-    key: "adminName",
+    title: "日志内容",
+    dataIndex: "logContent",
+    key: "logContent",
   },
   {
-    title: "手机号",
-    dataIndex: "phone",
-    key: "phone",
+    title: "操作人姓名",
+    dataIndex: "operateName",
+    key: "operateName",
   },
   {
     title: "状态",

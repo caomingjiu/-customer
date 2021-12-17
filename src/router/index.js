@@ -36,6 +36,16 @@ const routes = [
         name: 'feedback',
         component: () => import('../views/person/feedback.vue'),
       },
+      {
+        path: '/performance',
+        name: 'performance',
+        component: () => import('../views/person/performance.vue'),
+      },
+      {
+        path: '/customer',
+        name: 'customer',
+        component: () => import('../views/person/customer.vue'),
+      },
       //系统模块
       {
         path: '/sysPeople',
@@ -73,6 +83,11 @@ const routes = [
         path: '/plan',
         name: 'plan',
         component: () => import('../views/industry/plan.vue'),
+      },
+      {
+        path: '/order',
+        name: 'order',
+        component: () => import('../views/industry/order.vue'),
       },
     ],
   },

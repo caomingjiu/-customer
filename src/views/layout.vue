@@ -39,7 +39,7 @@
               <a-menu-item key="1" @click="into(1)">员工信息管理</a-menu-item>
               <a-menu-item key="2" @click="into(2)">客户信息管理</a-menu-item>
               <a-menu-item key="3" @click="into(3)">反馈信息管理</a-menu-item>
-              <!-- <a-menu-item key="5" @click="into(4)">招生情况</a-menu-item> -->
+              <a-menu-item key="7" @click="into(7)">业绩信息管理</a-menu-item>
             </a-sub-menu>
             <a-sub-menu key="sub2">
               <span slot="title"
@@ -61,6 +61,7 @@
               >
               <a-menu-item key="15" @click="into(10)">产品信息管理</a-menu-item>
               <a-menu-item key="16" @click="into(11)">计划信息管理</a-menu-item>
+              <a-menu-item key="17" @click="into(12)">订单信息管理</a-menu-item>
             </a-sub-menu>
           </a-menu>
         </div>
@@ -120,7 +121,7 @@ export default {
         }
       }
       if (index == 2) {
-        this.$router.push("/teacherTable");
+        this.$router.push("/customer");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {
@@ -200,7 +201,7 @@ export default {
         }
       }
       if (index == 7) {
-        this.$router.push("/sysRole");
+        this.$router.push("/performance");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {
@@ -209,7 +210,7 @@ export default {
         }
         if (i == this.panes.length) {
           this.panes.push({
-            name: "角色信息管理",
+            name: "业绩信息管理",
             id: 7,
           });
           this.activeKey = 7;
@@ -277,6 +278,22 @@ export default {
             id: 11,
           });
           this.activeKey = 11;
+        }
+      }
+      if (index == 12) {
+        this.$router.push("/plan");
+        let i = 0;
+        for (; i < this.panes.length; i++) {
+          if (this.panes[i].id == index) {
+            break;
+          }
+        }
+        if (i == this.panes.length) {
+          this.panes.push({
+            name: "订单信息管理",
+            id: 12,
+          });
+          this.activeKey = 12;
         }
       }
     },

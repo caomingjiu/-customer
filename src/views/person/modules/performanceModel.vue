@@ -10,23 +10,44 @@
     >
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">管理名字:</p>
+          <p style="margin-top: 5px">员工名字:</p>
         </div>
-        <a-input
-          v-model="sysName"
+        <a-input v-model="name" style="width: 90%" placeholder="input name" />
+      </div>
+      <div class="cc-df">
+        <div style="width: 70px">
+          <p style="margin-top: 5px">员工电话:</p>
+        </div>
+        <a-input v-model="phone" style="width: 90%" placeholder="input phone" />
+      </div>
+      <div class="cc-df">
+        <div style="width: 70px">
+          <p style="margin-top: 5px">员工年龄:</p>
+        </div>
+        <a-input-number
+          v-model="age"
           style="width: 90%"
-          placeholder="input className"
+          placeholder="input age"
         />
       </div>
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">管理密码:</p>
+          <p style="margin-top: 5px">员工工资:</p>
         </div>
-        <a-input-password
-          v-model="sysPassword"
+        <a-input-number
+          v-model="wage"
           style="width: 90%"
-          placeholder="input className"
+          placeholder="input wage"
         />
+      </div>
+      <div class="cc-df">
+        <div style="width: 70px">
+          <p style="margin-top: 5px">员工性别:</p>
+        </div>
+        <a-radio-group name="radioGroup" v-model="gender">
+          <a-radio value="男"> 男 </a-radio>
+          <a-radio value="女"> 女 </a-radio>
+        </a-radio-group>
       </div>
       <div class="cc-df" v-if="this.classType == 'put'">
         <div style="width: 70px">
@@ -42,7 +63,7 @@
       </div>
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">角色名称:</p>
+          <p style="margin-top: 5px">部门名称:</p>
         </div>
         <a-select
           style="width: 90%"
@@ -54,7 +75,24 @@
           @change="handleChange"
         >
           <a-select-option v-for="(item, index) in roles" :key="index">
-            {{ item.roleName }}
+            {{ item.depName }}
+          </a-select-option>
+        </a-select>
+      </div>
+      <div class="cc-df">
+        <div style="width: 70px">
+          <p style="margin-top: 5px">职位名称:</p>
+        </div>
+        <a-select
+          style="width: 90%"
+          show-search
+          v-model="positionName"
+          placeholder="Select a role"
+          option-filter-prop="children"
+          :filter-option="filterOption"
+        >
+          <a-select-option v-for="(item, index) in positions" :key="index">
+            {{ item.positionName }}
           </a-select-option>
         </a-select>
       </div>
@@ -73,8 +111,13 @@ export default {
       roles: [],
       roleId: 0,
       roleName: "",
-      sysName: "",
-      sysPassword: "",
+      positionName: "",
+      positions: [],
+      name: "",
+      wage: 0,
+      age: 0,
+      phone: "",
+      gender: "男",
       classType: "",
       record: {},
       isTrue: true,
@@ -84,27 +127,47 @@ export default {
     this.selectRole();
   },
   methods: {
+    clean() {
+      this.roleId = 0;
+      this.roleName = "";
+      this.positionName = "";
+      this.name = "";
+      this.wage = 0;
+      this.age = 0;
+      this.phone = "";
+    },
     fuzhi(record) {
       this.record = record;
-      this.isTrue = this.record.status;
-      for (let i = 0; i < this.roles.length; i++) {
-        if (this.record.roleName == this.roles[i].roleName) {
-          this.roleId = this.roles[i].id;
-        }
-      }
-      this.roleName = this.record.roleName;
+      this.roleName = this.record.employeeType;
+      this.positionName = this.record.employeeType;
+      this.name = this.record.employeeName;
+      this.wage = this.record.wage;
+      this.age = this.record.age;
+      this.phone = this.record.phone;
     },
     async selectRole() {
-      this.url = this.GLOBAL.baseUrl + "/sys/role";
+      this.url = this.GLOBAL.baseUrl + "/dep/list";
       this.result = await API.init(this.url, {}, "get");
       this.roles = this.result.data;
     },
-    async addSys() {
-      this.url = this.GLOBAL.baseUrl + "/sys/user/register";
+    async selectPosition() {
+      this.url = this.GLOBAL.baseUrl + "/position/dep";
       this.data = {
-        password: this.sysPassword,
-        roleId: this.roleId,
-        userName: this.sysName,
+        depId: this.roleId,
+      };
+      this.result = await API.init(this.url, this.data, "get");
+      this.positions = this.result.data;
+    },
+    async addSys() {
+      this.url = this.GLOBAL.baseUrl + "/emp";
+      this.data = {
+        age: this.age,
+        employeeName: this.name,
+        employeeType: this.positionName,
+        password: "123456",
+        phone: this.phone,
+        sex: this.gender,
+        wage: this.wage,
       };
       this.result = await API.init(this.url, this.data, "post");
       console.log(this.result);
@@ -114,6 +177,7 @@ export default {
           type: "success",
         });
         this.visible = false;
+        this.clean();
         this.$emit("getAll");
       }
       if (this.result.code == 50003) {
@@ -126,11 +190,14 @@ export default {
     async putSys() {
       this.url = this.GLOBAL.baseUrl + "/sys/user";
       this.data = {
-        roleId: this.roleId,
-        status: this.isTrue,
-        sysUserName: this.sysName,
-        sysUserPassword: this.sysPassword,
-        userId: this.record.userId,
+        age: this.age,
+        employeeName: this.name,
+        employeeType: this.positionName,
+        password: "123456",
+        phone: this.phone,
+        sex: this.gender,
+        wage: this.wage,
+        id: this.record.id,
       };
       this.result = await API.init(this.url, this.data, "put");
       console.log(this.result);
@@ -150,10 +217,11 @@ export default {
     handleChange(value) {
       // console.log(`selected ${value}`);
       for (let i = 0; i < this.roles.length; i++) {
-        if (this.roles[value].roleName == this.roles[i].roleName) {
+        if (this.roles[value].depName == this.roles[i].depName) {
           this.roleId = this.roles[i].id;
         }
       }
+      this.selectPosition();
       console.log(`selected ${this.roleId}`);
     },
     filterOption(input, option) {

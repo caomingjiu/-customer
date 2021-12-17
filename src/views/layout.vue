@@ -281,7 +281,7 @@ export default {
         }
       }
       if (index == 12) {
-        this.$router.push("/plan");
+        this.$router.push("/order");
         let i = 0;
         for (; i < this.panes.length; i++) {
           if (this.panes[i].id == index) {

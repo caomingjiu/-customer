@@ -59,6 +59,7 @@
       class="address"
       :total="result.data.total"
       show-size-changer
+      show-less-items
       show-quick-jumper
       @change="onChange"
       @showSizeChange="onShow"
@@ -183,7 +184,7 @@ export default {
 </script>
 <style scoped>
 .address {
-  margin-left: 65%;
+  margin-left: 59%;
   margin-top: 10px;
 }
 /*列表上方操作按钮区域*/

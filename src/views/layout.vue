@@ -33,14 +33,20 @@
               <a-icon type="mail" />
               首页
             </a-menu-item>
-            <a-sub-menu key="sub1" v-if="roleId == 1">
+            <a-sub-menu key="sub1">
               <span slot="title"
                 ><a-icon type="setting" /><span>人事管理</span></span
               >
-              <a-menu-item key="1" @click="into(1)">员工信息管理</a-menu-item>
-              <a-menu-item key="2" @click="into(2)">客户信息管理</a-menu-item>
+              <a-menu-item key="1" @click="into(1)" v-if="roleId == 1"
+                >员工信息管理</a-menu-item
+              >
+              <a-menu-item key="2" @click="into(2)" v-if="roleId == 1"
+                >客户信息管理</a-menu-item
+              >
               <a-menu-item key="3" @click="into(3)">反馈信息管理</a-menu-item>
-              <a-menu-item key="7" @click="into(7)">业绩信息管理</a-menu-item>
+              <a-menu-item key="7" @click="into(7)" v-if="roleId == 1"
+                >业绩信息管理</a-menu-item
+              >
             </a-sub-menu>
             <a-sub-menu key="sub2" v-if="roleId == 1">
               <span slot="title"

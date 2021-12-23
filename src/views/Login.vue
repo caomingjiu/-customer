@@ -81,6 +81,7 @@ export default {
           type: "success",
         });
         this.$cookies.set("user", this.result.data, "1h");
+        this.$cookies.set("roleId", this.roleId, "1h");
         this.$router.push("/layout");
       } else {
         this.$message.error("登录失败");

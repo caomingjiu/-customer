@@ -53,8 +53,8 @@
       :pagination="false"
     >
       <span slot="status" slot-scope="text">
-        <p v-if="text" style="color: #1890ff; margin-top: 12px">正常</p>
-        <p v-if="!text" style="color: red; margin-top: 12px">禁用</p>
+        <p v-if="text" style="color: red; margin-top: 12px">未完成</p>
+        <p v-if="!text" style="color: #1890ff; margin-top: 12px">已完成</p>
       </span>
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
@@ -77,19 +77,24 @@ const API = require("../../request/api.js");
 import planModel from "./modules/planModel.vue";
 const columns = [
   {
-    title: "管理名字",
-    dataIndex: "adminName",
-    key: "adminName",
+    title: "员工名称",
+    dataIndex: "employeeName",
+    key: "employeeName",
   },
   {
-    title: "手机号",
-    dataIndex: "phone",
-    key: "phone",
+    title: "客户名称",
+    dataIndex: "cuName",
+    key: "cuName",
+  },
+  {
+    title: "计划利润",
+    dataIndex: "planProfits",
+    key: "planProfits",
   },
   {
     title: "状态",
-    dataIndex: "status",
-    key: "status",
+    dataIndex: "ifReach",
+    key: "ifReach",
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "status" },
   },
@@ -164,7 +169,7 @@ export default {
       return y + "-" + MM + "-" + d + " " + h + ":" + m + ":" + s;
     },
     async selectSys() {
-      this.url = this.GLOBAL.baseUrl + "/admin";
+      this.url = this.GLOBAL.baseUrl + "/plan";
       this.data = {
         pageNo: this.pages.current,
         pageSize: this.pages.pageSize,

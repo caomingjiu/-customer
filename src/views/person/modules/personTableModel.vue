@@ -90,6 +90,7 @@
           placeholder="Select a role"
           option-filter-prop="children"
           :filter-option="filterOption"
+          @change="handleChange1"
         >
           <a-select-option v-for="(item, index) in positions" :key="index">
             {{ item.positionName }}
@@ -112,6 +113,7 @@ export default {
       roleId: 0,
       roleName: "",
       positionName: "",
+      positionId: 0,
       positions: [],
       name: "",
       wage: 0,
@@ -164,6 +166,7 @@ export default {
         age: this.age,
         employeeName: this.name,
         employeeType: this.positionName,
+        positionId: this.positionId,
         password: "123456",
         phone: this.phone,
         sex: this.gender,
@@ -188,11 +191,12 @@ export default {
       }
     },
     async putSys() {
-      this.url = this.GLOBAL.baseUrl + "/sys/user";
+      this.url = this.GLOBAL.baseUrl + "/emp";
       this.data = {
         age: this.age,
         employeeName: this.name,
         employeeType: this.positionName,
+        positionId: this.positionId,
         password: "123456",
         phone: this.phone,
         sex: this.gender,
@@ -223,6 +227,10 @@ export default {
       }
       this.selectPosition();
       console.log(`selected ${this.roleId}`);
+    },
+    handleChange1(value) {
+      console.log(`selected ${value}`);
+      this.positionId = this.positions[value].id;
     },
     filterOption(input, option) {
       return (

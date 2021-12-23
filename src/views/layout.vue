@@ -18,8 +18,9 @@
           :style="{ fontSize: '20px', color: '#FFFFFF' }"
         />
         <a-icon
-          type="bell"
+          type="import"
           class="icon-header"
+          @click="into(100)"
           :style="{ fontSize: '20px', color: '#FFFFFF' }"
         />
       </div>
@@ -32,7 +33,7 @@
               <a-icon type="mail" />
               首页
             </a-menu-item>
-            <a-sub-menu key="sub1">
+            <a-sub-menu key="sub1" v-if="roleId == 1">
               <span slot="title"
                 ><a-icon type="setting" /><span>人事管理</span></span
               >
@@ -41,14 +42,14 @@
               <a-menu-item key="3" @click="into(3)">反馈信息管理</a-menu-item>
               <a-menu-item key="7" @click="into(7)">业绩信息管理</a-menu-item>
             </a-sub-menu>
-            <a-sub-menu key="sub2">
+            <a-sub-menu key="sub2" v-if="roleId == 1">
               <span slot="title"
                 ><a-icon type="setting" /><span>部门管理</span></span
               >
               <a-menu-item key="4" @click="into(4)">职位信息管理</a-menu-item>
               <a-menu-item key="5" @click="into(5)">部门信息管理</a-menu-item>
             </a-sub-menu>
-            <a-sub-menu key="sub3">
+            <a-sub-menu key="sub3" v-if="roleId == 1">
               <span slot="title"
                 ><a-icon type="setting" /><span>权限管理</span></span
               >
@@ -92,11 +93,12 @@ export default {
       panes: [{ name: "首页", id: 0 }],
       activeKey: 0,
       user: this.$cookies.get("user"),
+      roleId: this.$cookies.get("roleId"),
     };
   },
   components: {},
   created() {
-    console.log(this.user);
+    console.log(this.roleId);
   },
   mounted() {},
   methods: {
@@ -295,6 +297,9 @@ export default {
           });
           this.activeKey = 12;
         }
+      }
+      if (index == 100) {
+        this.$router.push("/");
       }
     },
   },

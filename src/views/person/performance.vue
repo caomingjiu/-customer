@@ -20,9 +20,6 @@
       }"
       :pagination="false"
     >
-      <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
-      </span>
     </a-table>
     <a-pagination
       class="address"
@@ -59,13 +56,6 @@ const columns = [
     title: "完成时间",
     dataIndex: "nowTime",
     key: "nowTime",
-  },
-  {
-    title: "操作",
-    dataIndex: "action",
-    scopedSlots: { customRender: "action" },
-    align: "center",
-    width: 150,
   },
 ];
 export default {

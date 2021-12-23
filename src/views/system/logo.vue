@@ -20,10 +20,6 @@
       }"
       :pagination="false"
     >
-      <span slot="status" slot-scope="text">
-        <p v-if="text" style="color: #1890ff; margin-top: 12px">正常</p>
-        <p v-if="!text" style="color: red; margin-top: 12px">禁用</p>
-      </span>
     </a-table>
     <a-pagination
       class="address"
@@ -50,13 +46,6 @@ const columns = [
     title: "操作人姓名",
     dataIndex: "operateName",
     key: "operateName",
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    key: "status",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "status" },
   },
 ];
 export default {

@@ -10,91 +10,33 @@
     >
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">员工名字:</p>
+          <p style="margin-top: 5px">客户名字:</p>
         </div>
-        <a-input v-model="name" style="width: 90%" placeholder="input name" />
-      </div>
-      <div class="cc-df">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">员工电话:</p>
-        </div>
-        <a-input v-model="phone" style="width: 90%" placeholder="input phone" />
-      </div>
-      <div class="cc-df">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">员工年龄:</p>
-        </div>
-        <a-input-number
-          v-model="age"
+        <a-input
+          v-model="sysName"
           style="width: 90%"
-          placeholder="input age"
+          placeholder="input className"
         />
       </div>
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">员工工资:</p>
+          <p style="margin-top: 5px">手机号:</p>
         </div>
-        <a-input-number
-          v-model="wage"
+        <a-input
+          v-model="phone"
           style="width: 90%"
-          placeholder="input wage"
+          placeholder="input className"
         />
       </div>
       <div class="cc-df">
         <div style="width: 70px">
-          <p style="margin-top: 5px">员工性别:</p>
+          <p style="margin-top: 5px">客户地址:</p>
         </div>
-        <a-radio-group name="radioGroup" v-model="gender">
-          <a-radio value="男"> 男 </a-radio>
-          <a-radio value="女"> 女 </a-radio>
-        </a-radio-group>
-      </div>
-      <div class="cc-df" v-if="this.classType == 'put'">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">是否禁用:</p>
-        </div>
-        <a-switch
-          style="margin-top: 5px"
-          checked-children="正常"
-          un-checked-children="禁用"
-          @change="switchButton"
-          v-model="isTrue"
+        <a-input
+          v-model="sysPassword"
+          style="width: 90%"
+          placeholder="input className"
         />
-      </div>
-      <div class="cc-df">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">部门名称:</p>
-        </div>
-        <a-select
-          style="width: 90%"
-          show-search
-          v-model="roleName"
-          placeholder="Select a role"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          @change="handleChange"
-        >
-          <a-select-option v-for="(item, index) in roles" :key="index">
-            {{ item.depName }}
-          </a-select-option>
-        </a-select>
-      </div>
-      <div class="cc-df">
-        <div style="width: 70px">
-          <p style="margin-top: 5px">职位名称:</p>
-        </div>
-        <a-select
-          style="width: 90%"
-          show-search
-          v-model="positionName"
-          placeholder="Select a role"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-        >
-          <a-select-option v-for="(item, index) in positions" :key="index">
-            {{ item.positionName }}
-          </a-select-option>
-        </a-select>
       </div>
     </a-modal>
   </div>
@@ -111,13 +53,9 @@ export default {
       roles: [],
       roleId: 0,
       roleName: "",
-      positionName: "",
-      positions: [],
-      name: "",
-      wage: 0,
-      age: 0,
-      phone: "",
-      gender: "男",
+      sysName: "",
+      sysPassword: "",
+      phone:"",
       classType: "",
       record: {},
       isTrue: true,
@@ -127,47 +65,27 @@ export default {
     this.selectRole();
   },
   methods: {
-    clean() {
-      this.roleId = 0;
-      this.roleName = "";
-      this.positionName = "";
-      this.name = "";
-      this.wage = 0;
-      this.age = 0;
-      this.phone = "";
-    },
     fuzhi(record) {
       this.record = record;
-      this.roleName = this.record.employeeType;
-      this.positionName = this.record.employeeType;
-      this.name = this.record.employeeName;
-      this.wage = this.record.wage;
-      this.age = this.record.age;
-      this.phone = this.record.phone;
+      this.isTrue = this.record.status;
+      for (let i = 0; i < this.roles.length; i++) {
+        if (this.record.roleName == this.roles[i].roleName) {
+          this.roleId = this.roles[i].id;
+        }
+      }
+      this.roleName = this.record.roleName;
     },
     async selectRole() {
-      this.url = this.GLOBAL.baseUrl + "/dep/list";
+      this.url = this.GLOBAL.baseUrl + "/sys/role";
       this.result = await API.init(this.url, {}, "get");
       this.roles = this.result.data;
     },
-    async selectPosition() {
-      this.url = this.GLOBAL.baseUrl + "/position/dep";
-      this.data = {
-        depId: this.roleId,
-      };
-      this.result = await API.init(this.url, this.data, "get");
-      this.positions = this.result.data;
-    },
     async addSys() {
-      this.url = this.GLOBAL.baseUrl + "/emp";
+      this.url = this.GLOBAL.baseUrl + "/customer";
       this.data = {
-        age: this.age,
-        employeeName: this.name,
-        employeeType: this.positionName,
-        password: "123456",
+        address: this.sysPassword,
+        cuName: this.sysName,
         phone: this.phone,
-        sex: this.gender,
-        wage: this.wage,
       };
       this.result = await API.init(this.url, this.data, "post");
       console.log(this.result);
@@ -177,7 +95,6 @@ export default {
           type: "success",
         });
         this.visible = false;
-        this.clean();
         this.$emit("getAll");
       }
       if (this.result.code == 50003) {
@@ -190,14 +107,11 @@ export default {
     async putSys() {
       this.url = this.GLOBAL.baseUrl + "/sys/user";
       this.data = {
-        age: this.age,
-        employeeName: this.name,
-        employeeType: this.positionName,
-        password: "123456",
-        phone: this.phone,
-        sex: this.gender,
-        wage: this.wage,
-        id: this.record.id,
+        roleId: this.roleId,
+        status: this.isTrue,
+        sysUserName: this.sysName,
+        sysUserPassword: this.sysPassword,
+        userId: this.record.userId,
       };
       this.result = await API.init(this.url, this.data, "put");
       console.log(this.result);
@@ -212,24 +126,6 @@ export default {
       if (this.result.code == 50001) {
         this.$message.error("修改失败");
       }
-    },
-    //选择器
-    handleChange(value) {
-      // console.log(`selected ${value}`);
-      for (let i = 0; i < this.roles.length; i++) {
-        if (this.roles[value].depName == this.roles[i].depName) {
-          this.roleId = this.roles[i].id;
-        }
-      }
-      this.selectPosition();
-      console.log(`selected ${this.roleId}`);
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
     },
     //model
     handleOk(e) {

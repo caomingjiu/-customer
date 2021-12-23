@@ -70,7 +70,7 @@
 </template>
 <script>
 const API = require("../../request/api.js");
-import personTableModel from "./modules/personTableModel.vue";
+import personTableModel from "./modules/customerModel.vue";
 const columns = [
   {
     title: "客户姓名",
